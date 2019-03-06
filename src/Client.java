@@ -143,6 +143,8 @@ public class Client {
 					proxy.deleteSongFromPlaylist(userID, playlist, songID);
 					break;
 				}
+				
+				// Request Songs from a playlist
 				case '9': {
 					//TEST - Add two songs then request the playlist
 					
@@ -182,5 +184,4 @@ public class Client {
 		sender.stop();
 		connection.close();
 	}
-
 }
