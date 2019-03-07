@@ -1,12 +1,34 @@
+/**
+ * Main Class for Client. 
+ * Will provide menu with test options from terminal.
+ * 
+ * @author Nanae Aubry
+ * @author Pedro Lopez
+ * @author Brian Kelly
+ */
+
+//TODO: MOVE PLAYER TO IS OWN THREAD
+//TODO: 
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import SharedSources.RPCDescriptor;
+
 import SharedSources.RPCManager;
 import SharedSources.Receiver;
 import SharedSources.Sender;
 import SharedSources.UDPConnection;
+
+import Stream.CECS327InputStream;
+import Stream.Music;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 
 public class Client {
 
@@ -18,22 +40,26 @@ public class Client {
 		// Open a connection
 		UDPConnection connection = new UDPConnection();
 		connection.open(CLIENT_PORT, MAX_DATAGRAM_SIZE);
-		System.out.println("Server IP: " + connection.getLocalAddress() + " Server port: " + CLIENT_PORT);
+		System.out.println("Client IP: " + connection.getLocalAddress() + " Client port: " + CLIENT_PORT);
 
 		// Create the services
 		Receiver receiver = new Receiver(connection);
 		Sender sender = new Sender(connection);
 		RPCManager rpcManager = new RPCManager();
+		StreamPlayer = sPlayer  = new StreamPlayer();
 
 		// Create the services
 		Thread taskReceiver = new Thread(receiver);
 		Thread taskSender = new Thread(sender);
 		Thread taskRPCManager = new Thread(rpcManager);
+		Thread playerThread  = new Thread(sPlayer);
 
 		// Run the services as threads
 		taskReceiver.start();
 		taskSender.start();
 		taskRPCManager.start();
+		playerThread.start();
+
 		
 		// Create Proxy (middle ware between client and comms module (sender)
 		Proxy proxy = new Proxy(sender, connection.getLocalAddress());
@@ -57,6 +83,9 @@ public class Client {
 			System.out.println("7. Add song to Jazz                 ");
 			System.out.println("8. Delete song from Jazz            ");
 			System.out.println("9. Get songs from Jazz              ");
+			System.out.println("------------------------------------");
+			System.out.println("a .Play Local Song File             ");
+			System.out.println("b .Play Remote Song File            ");
 			System.out.println("------------------------------------");
 			System.out.println("x. Shut down the client and quit.   ");
 			System.out.println("************************************");
@@ -173,6 +202,38 @@ public class Client {
 					proxy.getSongsFromPlaylist(userID, playlist);
 					break;
 				}
+				
+				case 'a': {
+				       Integer i;
+				        Gson gson = new Gson();
+				        
+				        try 
+				        {
+				            Music[] music = gson.fromJson(new FileReader("music.json"), Music[].class);
+
+				            for (i=0; i<music.length; i++)
+				            {
+				                if (music[i].song.title.startsWith("The Imperial March from"))
+				                {
+				                    System.out.println("Playing " + music[i].song.title);
+				                    //Main player = new Main();
+				                    mp3play(music[i].song.id);
+				                    System.out.println("End of the song");
+				                }
+				            }
+				        }
+				        catch (FileNotFoundException ex)
+				        {
+				            System.out.println("Cannot read Json file.");
+				            ex.printStackTrace();
+				        }
+					break;
+				}
+				case 'b': {
+					
+					break;
+				}
+				
 				}
 			}
 		} while (key != 'x'); // until it is a valid key
@@ -184,4 +245,31 @@ public class Client {
 		sender.stop();
 		connection.close();
 	}
+	
+	
+	
+    /**
+   * Play a given audio file.
+   * @param audioFilePath Path of the audio file.
+   */
+  static void mp3play(String file) {
+	  String folder = "raw\\";
+	  String full_path = folder + file;
+	  try {
+          // It uses CECS327InputStream as InputStream to play the song 
+           InputStream is = new CECS327InputStream(full_path);
+           Player mp3player = new Player(is);
+           mp3player.play();
+	}
+	catch (JavaLayerException ex) {
+	    ex.printStackTrace();
+	}
+	catch (IOException ex) {
+	      System.out.println("Error playing the audio file.");
+	      ex.printStackTrace();
+	  }
+  }
+  
+  
+  
 }
