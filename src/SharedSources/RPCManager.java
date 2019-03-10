@@ -1,4 +1,7 @@
+// CLIENT RPC Manager
+
 package SharedSources;
+
 import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +15,7 @@ import com.google.gson.GsonBuilder;
  * @author rTunes team
  *
  */
+//THIS IS THE CLIENT RPC Manager
 public class RPCManager implements Runnable {
 
 	// Attributes
