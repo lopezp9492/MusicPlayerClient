@@ -27,6 +27,7 @@ import SharedSources.UDPConnection;
 
 import Stream.CECS327InputStream;
 import Stream.Music;
+import Stream.CECS327Player;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
@@ -46,20 +47,19 @@ public class Client {
 		Receiver receiver = new Receiver(connection);
 		Sender sender = new Sender(connection);
 		RPCManager rpcManager = new RPCManager();
-		StreamPlayer = sPlayer  = new StreamPlayer();
+		//TODO: CECS327Player = sPlayer  = new CECS327Player();
 
 		// Create the services
 		Thread taskReceiver = new Thread(receiver);
 		Thread taskSender = new Thread(sender);
 		Thread taskRPCManager = new Thread(rpcManager);
-		Thread playerThread  = new Thread(sPlayer);
+		//TODO: Thread playerThread  = new Thread(sPlayer);
 
 		// Run the services as threads
 		taskReceiver.start();
 		taskSender.start();
 		taskRPCManager.start();
-		playerThread.start();
-
+		//TODO: playerThread.start();
 		
 		// Create Proxy (middle ware between client and comms module (sender)
 		Proxy proxy = new Proxy(sender, connection.getLocalAddress());
@@ -73,7 +73,7 @@ public class Client {
 
 		do {
 			System.out.println("\n\n");
-			System.out.println("********** Menu Server *************");
+			System.out.println("********** Menu Client *************");
 			System.out.println("1. Test login                       ");
 			System.out.println("2. Test get songs                   ");
 			System.out.println("3. Test get songs with filter       ");
@@ -230,7 +230,8 @@ public class Client {
 					break;
 				}
 				case 'b': {
-					
+					String song = "The Imperial March";
+					//sPlayer.play(song);					
 					break;
 				}
 				
