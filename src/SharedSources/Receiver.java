@@ -12,6 +12,7 @@ import java.util.List;
  * @author nanaeaubry
  *
  */
+// CLIENT RECEIVER
 public class Receiver implements Runnable {
 
 	// Attributes

@@ -17,8 +17,8 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import SharedSources.RPCDescriptor;
+
+import ClientClasses.Proxy;
 
 import SharedSources.RPCManager;
 import SharedSources.Receiver;
@@ -28,6 +28,7 @@ import SharedSources.UDPConnection;
 import Stream.CECS327InputStream;
 import Stream.Music;
 import Stream.CECS327Player;
+
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 

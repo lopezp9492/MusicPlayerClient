@@ -1,3 +1,4 @@
+package ClientClasses;
 /**
 * The Proxy implements ProxyInterface class. The class is incomplete 
 * 
